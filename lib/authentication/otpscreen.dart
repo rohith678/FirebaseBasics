@@ -1,4 +1,5 @@
 import 'package:firebaseapp/authentication/authprovider.dart';
+import 'package:firebaseapp/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
@@ -25,40 +26,56 @@ class _OTPScreenState extends State<OTPScreen> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: isLoading == false
-          ? Column(children: [
-              Pinput(
-                length: 6,
-                showCursor: true,
-                defaultPinTheme: PinTheme(
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                            color:
-                                Theme.of(context).colorScheme.inversePrimary)),
-                    textStyle: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.w600)),
-                onCompleted: (val) {
-                  setState(() {
-                    otpCode = val;
-                  });
-                },
+          ? Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Center(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image.asset("images/mobile2_bg.png"),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      Pinput(
+                        length: 6,
+                        showCursor: true,
+                        defaultPinTheme: PinTheme(
+                            width: 60,
+                            height: 60,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .inversePrimary)),
+                            textStyle: const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.w600)),
+                        onCompleted: (val) {
+                          setState(() {
+                            otpCode = val;
+                          });
+                        },
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      ElevatedButton(
+                          onPressed: () {
+                            if (otpCode != '') {
+                              verifyOTP(context, verificationId, otpCode);
+                            } else {
+                              showSnackBar(context, "Enter 6 digit code");
+                            }
+                          },
+                          child: const Text("Verify OTP")),
+                      TextButton(
+                          onPressed: () {},
+                          child: const Text("Didnt receive code"))
+                    ]),
               ),
-              ElevatedButton(
-                  onPressed: () {
-                    if (otpCode != '') {
-                      verifyOTP(context, verificationId, otpCode);
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Enter 6 digit code")));
-                    }
-                  },
-                  child: const Text("Verify OTP")),
-              TextButton(
-                  onPressed: () {}, child: const Text("Didnt receive code"))
-            ])
-          : const CircularProgressIndicator(),
+            )
+          : const Center(child: CircularProgressIndicator()),
     );
   }
 
@@ -78,7 +95,7 @@ class _OTPScreenState extends State<OTPScreen> {
           });
         } else {
           //new user
-          Navigator.pushNamed(context, "/userDetails");
+          Navigator.pushReplacementNamed(context, "/userDetails");
         }
       });
     });

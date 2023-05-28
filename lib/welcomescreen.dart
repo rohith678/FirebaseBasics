@@ -14,23 +14,43 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
-      body: Column(children: [
-        const Text("Welcome Screen"),
-        ElevatedButton(
-            onPressed: () async {
-              if (authProvider.isSignedIn == true) {
-                await authProvider
-                    .getDataFromSharedPreferences()
-                    .whenComplete(() {
-                      Navigator.pushReplacementNamed(context, "/home");
-                    });
-                
-              } else {
-                Navigator.pushReplacementNamed(context, "/phone");
-              }
-            },
-            child: const Text("Get Started"))
-      ]),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Center(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.asset(
+                  "images/welcomeimage.png",
+                  height: 300,
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                Text(
+                  "Welcome to the Firebase practice App",
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                ElevatedButton(
+                    onPressed: () async {
+                      if (authProvider.isSignedIn == true) {
+                        await authProvider
+                            .getDataFromSharedPreferences()
+                            .whenComplete(() {
+                          Navigator.pushReplacementNamed(context, "/home");
+                        });
+                      } else {
+                        Navigator.pushReplacementNamed(context, "/phone");
+                      }
+                    },
+                    child: const Text("Get Started"))
+              ]),
+        ),
+      ),
     );
   }
 }

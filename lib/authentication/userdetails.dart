@@ -42,72 +42,75 @@ class _UserDetailsState extends State<UserDetails> {
         title: const Text("user Registration"),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(8.0),
-        child: isLoading == true
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-            : Center(
-                child: Column(children: [
-                  InkWell(
-                      onTap: () {
-                        selectImage();
-                      },
-                      child: image == null
-                          ? CircleAvatar(
-                              backgroundColor: Theme.of(context)
-                                  .colorScheme
-                                  .primaryContainer,
-                              radius: 50,
-                              child: const Icon(
-                                Icons.circle,
-                                size: 50,
-                                color: Colors.white,
-                              ),
-                            )
-                          : CircleAvatar(
-                              backgroundImage: FileImage(image!),
-                              radius: 50,
-                            )),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  TextFormField(
-                    controller: nameController,
-                    keyboardType: TextInputType.name,
-                    decoration: InputDecoration(
-                        hintText: "Enter your name",
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16))),
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                        hintText: "Enter your email",
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16))),
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: bioController,
-                    keyboardType: TextInputType.name,
-                    decoration: InputDecoration(
-                        hintText: "Enter your bio",
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16))),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                      onPressed: () {
-                        storeData();
-                      },
-                      child: const Text('sign up'))
-                ]),
+      body: isLoading == true
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Center(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      InkWell(
+                          onTap: () {
+                            selectImage();
+                          },
+                          child: image == null
+                              ? CircleAvatar(
+                                  backgroundColor: Theme.of(context)
+                                      .colorScheme
+                                      .primaryContainer,
+                                  radius: 50,
+                                  child: const Icon(
+                                    Icons.person,
+                                    size: 50,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : CircleAvatar(
+                                  backgroundImage: FileImage(image!),
+                                  radius: 50,
+                                )),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      TextFormField(
+                        controller: nameController,
+                        keyboardType: TextInputType.name,
+                        decoration: InputDecoration(
+                            hintText: "Enter your name",
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16))),
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                            hintText: "Enter your email",
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16))),
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: bioController,
+                        keyboardType: TextInputType.name,
+                        decoration: InputDecoration(
+                            hintText: "Enter your bio",
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16))),
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                          onPressed: () {
+                            storeData();
+                          },
+                          child: const Text('sign up'))
+                    ]),
               ),
-      ),
+            ),
     );
   }
 
