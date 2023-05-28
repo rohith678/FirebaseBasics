@@ -1,5 +1,6 @@
 import 'package:firebaseapp/pages/firestorepractice.dart';
 import 'package:firebaseapp/pages/firestoresearch.dart';
+import 'package:firebaseapp/pages/images.dart';
 import 'package:firebaseapp/pages/profile.dart';
 import 'package:firebaseapp/pages/storage.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ class _MyHomePageState extends State<MyHomePage> {
     const FireStorePractice(),
     const FireStoreSearch(),
     const Storage(),
+    const Images(),
     const Profile()
   ];
   int selectedIndex = 0;
@@ -37,6 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
             BottomNavigationBarItem(icon: Icon(Icons.search), label: "Search"),
             BottomNavigationBarItem(
                 icon: Icon(Icons.file_copy_sharp), label: "Storage"),
+            BottomNavigationBarItem(icon: Icon(Icons.image), label: "Images"),
             BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
           ]),
     );
