@@ -99,28 +99,35 @@ class FirebaseRepository {
           .child(_auth.currentUser!.uid)
           .child("/${file.name}");
       uploadTask = ref.putFile(File(file.path));
-      await uploadTask.whenComplete(() => null);
-      String ImageURL = await ref.getDownloadURL();
-      addImageToDB(ImageURL);
-      debugPrint("ImageURL $ImageURL");
+      firebase_storage.TaskSnapshot snapshot =
+          await uploadTask.whenComplete(() => null);
+
+      if (snapshot.state == firebase_storage.TaskState.success) {
+        String imageUrl = await ref.getDownloadURL();
+        addImageDataToDB(imageUrl, file.name);
+        debugPrint("ImageURL $imageUrl");
+      } else {
+        debugPrint('Error uploading image to Firebase Storage');
+      }
     } catch (error) {
       debugPrint("error in uploadImage $error");
     }
   }
 
-  void addImageToDB(String downloadURL) async {
+  void addImageDataToDB(String downloadURL, String fileName) async {
     await _db
         .collection("users")
         .doc(_auth.currentUser!.uid)
         .collection("images")
-        .add({"imageURL": downloadURL})
+        .doc(fileName)
+        .set({"imageURL": downloadURL, "imageName": fileName})
         .then((value) {})
         .catchError((error) {
           debugPrint("Error in addData $error");
         });
   }
 
-  Stream<List<String>> getImageStream() {
+  Stream<List<Map<String, String>>> getImageStream() {
     return _db
         .collection("users")
         .doc(_auth.currentUser!.uid)
@@ -128,8 +135,40 @@ class FirebaseRepository {
         .snapshots()
         .map((QuerySnapshot snapshot) {
       return snapshot.docs.map((DocumentSnapshot document) {
-        return document["imageURL"].toString();
+        return {
+          "imageURL": document["imageURL"].toString(),
+          "imageName": document["imageName"].toString()
+        };
       }).toList();
     });
+  }
+
+  Future<void> deleteImageFromDB(String imageName) async {
+    try {
+      _db
+          .collection("users")
+          .doc(_auth.currentUser!.uid)
+          .collection("images")
+          .doc(imageName)
+          .delete()
+          .then((value) {
+        deleteImageFromStorage(imageName);
+      });
+    } catch (error) {
+      debugPrint("Error in deleteTask $error");
+    }
+  }
+
+  void deleteImageFromStorage(String imageName) async {
+    firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
+        .ref()
+        .child("images/")
+        .child(_auth.currentUser!.uid)
+        .child("/$imageName");
+    try {
+      await ref.delete();
+    } catch (e) {
+      debugPrint("Error in delete Image from Storage");
+    }
   }
 }
