@@ -20,7 +20,7 @@ class _ImagesState extends State<Images> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: StreamBuilder<List<String>>(
+        child: StreamBuilder<List<Map<String, String>>>(
             stream: repository.getImageStream(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -32,20 +32,54 @@ class _ImagesState extends State<Images> {
                   child: Text('Error: ${snapshot.error}'),
                 );
               } else {
-                List<String> imagesList = snapshot.data ?? [];
-                return GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 10.0,
-                      crossAxisSpacing: 10.0,
-                      childAspectRatio: 1.0,
-                    ),
-                    itemCount: imagesList.length,
-                    itemBuilder: (context, index) {
-                      String image = imagesList[index];
-                      return GridTile(child: Image.network(image));
-                    });
+                List<Map<String, String>> imagesList = snapshot.data ?? [];
+                return imagesList.isEmpty
+                    ? const Center(
+                        child: Text("No images "),
+                      )
+                    : GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 10.0,
+                          crossAxisSpacing: 10.0,
+                          childAspectRatio: 1.0,
+                        ),
+                        itemCount: imagesList.length,
+                        itemBuilder: (context, index) {
+                          Map<String, String> imageMap = imagesList[index];
+                          return GestureDetector(
+                              onLongPress: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text(
+                                            "Are you sure to delete image"),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: const Text('No')),
+                                          TextButton(
+                                              onPressed: () {
+                                                repository
+                                                    .deleteImageFromDB(
+                                                        imageMap["imageName"]
+                                                            as String)
+                                                    .then((value) {});
+                                                Navigator.pop(context);
+                                              },
+                                              child: const Text('Yes')),
+                                        ],
+                                      );
+                                    });
+                              },
+                              child: GridTile(
+                                  child: Image.network(
+                                      imageMap["imageURL"] as String)));
+                        });
               }
             }),
       ),
