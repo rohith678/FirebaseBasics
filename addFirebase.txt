@@ -1,0 +1,12 @@
+install firebase cli in local
+
+Run these commands in terminal
+dart pub global activate flutterfire_cli
+flutterfire configure
+
+add firebase core dependency
+flutter pub add firebase_core
+
+add this to main method
+WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
